@@ -28,4 +28,4 @@ jobs:
       - name: Build if C directory has changed
         if: steps.check_changes.outputs.changed == 'true'
         run: |
-          # Run build commands for directory C here
+          echo "CHnges happend in C directory"
