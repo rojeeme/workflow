@@ -1,0 +1,31 @@
+name: Build on directory C changes
+
+on:
+  push:
+    paths:
+      - 'C/**' # Only trigger workflow if changes occur in directory C
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # Fetch all history so we can compare against previous commits
+          
+      - name: Check if C directory has changed
+        id: check_changes
+        run: |
+          if git diff HEAD^ HEAD --name-only | grep -q '^C/'; then
+            echo 'Directory C has changed'
+            echo "::set-output name=changed::true"
+          else
+            echo 'Directory C has not changed'
+            echo "::set-output name=changed::false"
+          fi
+          
+      - name: Build if C directory has changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          # Run build commands for directory C here
